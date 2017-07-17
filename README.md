@@ -344,4 +344,6 @@ Adapter
             this.name = name;
         }
     }
-  }
+    }
+    
+    http://camposha.info/platform/android/
