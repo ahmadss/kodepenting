@@ -1,4 +1,4 @@
-public class MainActivity extends AppCompatActivity {
+    public class MainActivity extends AppCompatActivity {
 
     private ListView lstText;
 
@@ -10,17 +10,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Create default options which will be used for every
-//  displayImage(...) call if no options will be passed to this method
+    //  displayImage(...) call if no options will be passed to this method
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder().cacheInMemory(true)
                 .cacheOnDisk(true).build();
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext()).defaultDisplayImageOptions(defaultOptions).build();
+        ImageLoaderConfiguration config = new       ImageLoaderConfiguration.Builder(getApplicationContext()).defaultDisplayImageOptions(defaultOptions).build();
         ImageLoader.getInstance().init(config); // Do it on Application start
 
         // Default options will be used
-//        DisplayImageOptions options = new DisplayImageOptions.Builder()
-//        .cacheInMemory(true)
-//                .cacheOnDisk(true)
-//        .build();
+        // DisplayImageOptions options = new DisplayImageOptions.Builder()
+        // .cacheInMemory(true)
+        // .cacheOnDisk(true)
+        // .build();
 
         lstText = (ListView)findViewById(R.id.listMovies);
 
@@ -55,21 +55,21 @@ public class MainActivity extends AppCompatActivity {
                     stringBuffer.append(line);
                 }
 
-//                {
-//                    "movies": [
-//                    {
-//                        "movie": "Avengers",
-//                            "year": 2012
-//                    }
-//                    ]
-//                }
+    //                {
+    //                    "movies": [
+    //                    {
+    //                        "movie": "Avengers",
+    //                            "year": 2012
+    //                    }
+    //                    ]
+    //                }
                 String finalJson = stringBuffer.toString();
                 JSONObject parentJosn = new JSONObject(finalJson);
 
                 JSONArray parentArray = parentJosn.getJSONArray("movies");
 
                 List<MovieModel> movieModelList = new ArrayList<>();
-//                StringBuffer finalBuffer = new StringBuffer();
+    //          StringBuffer finalBuffer = new StringBuffer();
                 for (int i = 0; i < parentArray.length(); i++) {
                     JSONObject finalObjek = parentArray.getJSONObject(i);
                     MovieModel movieModel = new MovieModel();
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
 
                     List<MovieModel.Cast> castList = new ArrayList<>();
                     for (int j = 0; j<finalObjek.getJSONArray("cast").length(); j++){
-//                        JSONObject castObjek = finalObjek.getJSONArray("cast").getJSONObject(j);
+                        JSONObject castObjek = finalObjek.getJSONArray("cast").getJSONObject(j);
                         MovieModel.Cast cast = new MovieModel.Cast();
                         cast.setName(finalObjek.getJSONArray("cast").getJSONObject(j).getString("name"));
                         castList.add(cast);
@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity {
                     //menambah ke final objek
                     movieModelList.add(movieModel);
 
-//                    String nama = finalObjek.getString("movie");
-//                    int tahun = finalObjek.getInt("year");
-//                    finalBuffer.append(nama + " - " + tahun + "\n");
+                    String nama = finalObjek.getString("movie");
+                    int tahun = finalObjek.getInt("year");
+                    finalBuffer.append(nama + " - " + tahun + "\n");
                 }
 
                 return movieModelList;
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<MovieModel> result) {
             super.onPostExecute(result);
-//            jsnText.setText(result);
+            jsnText.setText(result);
             //SET DATA UNTUL VIEWLIST
             MovieAdapter adapter = new MovieAdapter(getApplicationContext(), R.layout.row_list, result);
             lstText.setAdapter(adapter);
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
             holder.textDuration.setText(movieModelList.get(position).getDuration());
             holder.textDirector.setText(movieModelList.get(position).getDirector());
             holder.rbMovieRating.setRating((int)movieModelList.get(position).getRating()/2);
-//            Log.d("Rating", "getView: "+movieModelList.get(position).getRating()/2);
+    //      Log.d("Rating", "getView: "+movieModelList.get(position).getRating()/2);
 
             StringBuffer stringBuffer = new StringBuffer();
             for (MovieModel.Cast cast : movieModelList.get(position).getCastList()){
