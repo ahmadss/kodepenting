@@ -344,4 +344,4 @@ Adapter
             this.name = name;
         }
     }
-}
+  }
