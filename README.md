@@ -1,3 +1,5 @@
+  Activity
+   
     public class MainActivity extends AppCompatActivity {
 
     private ListView lstText;
@@ -126,6 +128,8 @@
             lstText.setAdapter(adapter);
         }
     }
+    
+Adapter
 
     public class MovieAdapter extends ArrayAdapter{
 
