@@ -1,5 +1,141 @@
-  Activity
-   
+    
+    public static final String DB_NAME = "reddit_database.db";
+
+    public abstract class TampilTable{
+        public static final String TABLE_NAME = "tampil_table";
+
+        public static final String TITLE = "title";
+        public static final String LINK = "link";
+        public static final String IMAGELINK = "imagelink";
+    }
+    
+     /**
+     * DATABASE VERSION
+     */
+    private static final int DATABASE_VERSION = 1;
+
+    /**
+     * TABLE STRINGS
+     */
+    private static final String TEXT_TYPE = " TEXT";
+    private static final String INTEGER_TYPE = " INTEGER";
+    private static final String COMMA = ", ";
+
+    /**
+     * SQL CREATE TABLE
+     */
+    private static final String CREATE_TAMPIL_TABLE = "CREATE TABLE "
+            +DatabaseConstract.TampilTable.TABLE_NAME + " ("
+            +DatabaseConstract.TampilTable.TITLE + TEXT_TYPE + COMMA
+            +DatabaseConstract.TampilTable.LINK + TEXT_TYPE + COMMA
+            +DatabaseConstract.TampilTable.IMAGELINK + TEXT_TYPE + " )";
+
+    public static final String DROP_TAMPIL_TABLE = "DROP TABLE IF EXISTS "+DatabaseConstract.TampilTable.TABLE_NAME;
+
+    public DatabaseOpenHelper(Context context) {
+        super(context, DatabaseConstract.DB_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(CREATE_TAMPIL_TABLE);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL(DROP_TAMPIL_TABLE);
+        onCreate(db);
+    }
+    
+    
+    public class RedditDAO {
+
+    /**
+     * Singleton Pattern
+     */
+    private static RedditDAO sInstance = null;
+
+    /**
+     * Get an Instance of database access Object
+     * @return
+     */
+    public static RedditDAO getInstance(){
+        if (sInstance == null){
+            sInstance = new RedditDAO();
+        }
+
+        return sInstance;
+    }
+
+    public boolean simpanTampil(Context context, List<Tampil> tampilList){
+
+        List<Tampil> simpanTampils  = RedditDAO.getInstance().getTampilFromDB(context);
+
+        try {
+            SQLiteDatabase db = new DatabaseOpenHelper(context).getWritableDatabase();
+
+            db.beginTransaction();
+            for (Tampil tampil : tampilList){
+
+                boolean isInDb = false;
+
+                for (Tampil tampilSimpan : simpanTampils){
+                    if (tampil.getTitle().equals(tampilSimpan.getTitle())){
+                        isInDb = true;
+                    }
+                }
+
+                if (!isInDb){
+                    ContentValues cv = new ContentValues();
+                    cv.put(DatabaseConstract.TampilTable.TITLE, tampil.getTitle());
+                    cv.put(DatabaseConstract.TampilTable.LINK, tampil.getPermalink());
+                    cv.put(DatabaseConstract.TampilTable.IMAGELINK, tampil.getThumbnailURL());
+
+                    db.insert(DatabaseConstract.TampilTable.TABLE_NAME, null, cv);
+                }
+            }
+
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+            db.close();
+        } catch (Exception e){
+            return false;
+        }
+
+        return true;
+    }
+
+    public List<Tampil> getTampilFromDB(Context context){
+        SQLiteDatabase db = new DatabaseOpenHelper(context).getWritableDatabase();
+
+        Cursor cursor = db.query(DatabaseConstract.TampilTable.TABLE_NAME, null, null, null, null, null, null);
+
+        cursor.moveToFirst();
+
+        List<Tampil> tampilList = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            String title = cursor.getString(cursor.getColumnIndex(DatabaseConstract.TampilTable.TITLE));
+            String link = cursor.getString(cursor.getColumnIndex(DatabaseConstract.TampilTable.LINK));
+            String imageLink = cursor.getString(cursor.getColumnIndex(DatabaseConstract.TampilTable.IMAGELINK));
+
+            Tampil tampil = new Tampil(title, link, imageLink);
+
+            tampilList.add(tampil);
+        }
+
+        cursor.close();
+        db.close();
+
+        return tampilList;
+    }
+}
+    
+    
+    
+    
+    
     public class MainActivity extends AppCompatActivity {
 
     private ListView lstText;
