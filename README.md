@@ -1,3 +1,46 @@
+    < == START BROADCASTRECEIVER == >    
+    
+     public static String MAIN = "Test";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        IntentFilter filter = new IntentFilter(MAIN);
+        BroadcastReceiver receiver = new MyReceiver();
+        registerReceiver(receiver, filter);
+    }
+
+    public void onBroadcast(View view){
+        sendBroadcast(new Intent(MAIN));
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        BroadcastReceiver receiver = new MyReceiver();
+        unregisterReceiver(receiver);
+    }
+    
+    public class MyReceiver extends BroadcastReceiver {
+
+        public MyReceiver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(MainActivity.MAIN)) {
+                Log.e("broadcast", intent.getAction());
+                Toast.makeText(context, "Broadcast Receiver Bekerja", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    
+    < == END BROADCASTRECEIVER ==>
+    
+    < == START DB SINGLETON ==>
+    
     
     public static final String DB_NAME = "reddit_database.db";
 
@@ -132,7 +175,7 @@
     }
 }
     
-    
+    < == END SINGETON ==>
     
     
     
